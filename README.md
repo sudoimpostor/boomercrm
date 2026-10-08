@@ -139,4 +139,4 @@ boomer-crm/
 
 ## 📄 License
 
-Distributed under the [MIT License](LICENSE). Free for personal and commercial use.
+Distributed under the **[GNU General Public License v3.0 (GPLv3)](LICENSE)**. Free and open source copyleft license.
