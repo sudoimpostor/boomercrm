@@ -19,6 +19,7 @@ Most modern business software is crowded with micro-fonts, hidden dropdown menus
 
 ## 🌟 Key Features
 
+* 🌐 **Bilingual Interface & Instant Language Toggle**: Full bilingual support (🇬🇧 English & 🇬🇷 Greek) with an instant language switcher in Settings that updates the entire UI in real time.
 * 🔍 **Phonetic Instant Search**: Real-time C-speed database lookup across customer names, account codes, mobile/landline numbers, tax IDs (AFM), and addresses.
 * 👥 **Client Management**: Full support for commercial B2B accounts and residential B2C customers, including dual addresses, dual phone numbers, tax offices (DOY), contact persons, and balance tracking.
 * 🧩 **Schemaless EAV Attributes**: Need to track custom notes or unusual property traits? The dynamic modal editor saves custom JSON fields without messing up the database.

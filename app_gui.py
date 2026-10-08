@@ -373,19 +373,19 @@ class NSOFTApp(ctk.CTk):
         self.logo_label = ctk.CTkLabel(self.sidebar_frame, text="BOOMER CRM", font=ctk.CTkFont(size=22, weight="bold"))
         self.logo_label.grid(row=0, column=0, padx=20, pady=25)
 
-        self.btn_registry = ctk.CTkButton(self.sidebar_frame, text="👥  ΠΕΛΑΤΕΣ", command=lambda: self.switch_frame("registry"))
+        self.btn_registry = ctk.CTkButton(self.sidebar_frame, text=self.ui_cfg.get_text("nav_clients"), command=lambda: self.switch_frame("registry"))
         self.btn_registry.grid(row=1, column=0, padx=20, pady=8, sticky="ew")
 
-        self.btn_calendar = ctk.CTkButton(self.sidebar_frame, text="📅  ΕΡΓΑΣΙΕΣ", command=lambda: self.switch_frame("calendar"))
+        self.btn_calendar = ctk.CTkButton(self.sidebar_frame, text=self.ui_cfg.get_text("nav_calendar"), command=lambda: self.switch_frame("calendar"))
         self.btn_calendar.grid(row=2, column=0, padx=20, pady=8, sticky="ew")
 
-        self.btn_ledger = ctk.CTkButton(self.sidebar_frame, text="💰  ΠΛΗΡΩΜΕΣ", command=lambda: self.switch_frame("ledger"))
+        self.btn_ledger = ctk.CTkButton(self.sidebar_frame, text=self.ui_cfg.get_text("nav_ledger"), command=lambda: self.switch_frame("ledger"))
         self.btn_ledger.grid(row=3, column=0, padx=20, pady=8, sticky="ew")
 
-        self.btn_analytics = ctk.CTkButton(self.sidebar_frame, text="📊  ΑΝΑΛΥΤΙΚΑ", command=lambda: self.switch_frame("analytics"))
+        self.btn_analytics = ctk.CTkButton(self.sidebar_frame, text=self.ui_cfg.get_text("nav_analytics"), command=lambda: self.switch_frame("analytics"))
         self.btn_analytics.grid(row=4, column=0, padx=20, pady=8, sticky="ew")
 
-        self.btn_settings = ctk.CTkButton(self.sidebar_frame, text="⚙️  ΡΥΘΜΙΣΕΙΣ", command=lambda: self.switch_frame("settings"), fg_color="#4A4A4A")
+        self.btn_settings = ctk.CTkButton(self.sidebar_frame, text=self.ui_cfg.get_text("nav_settings"), command=lambda: self.switch_frame("settings"), fg_color="#4A4A4A")
         self.btn_settings.grid(row=6, column=0, padx=20, pady=20, sticky="ew")
 
         self.desk_container = ctk.CTkFrame(self, fg_color="transparent")
@@ -415,6 +415,7 @@ class NSOFTApp(ctk.CTk):
         _recurse_hide(self)
 
     def switch_frame(self, frame_name):
+        self._current_frame_name = frame_name
         self.hide_all_autofill_dropdowns()
         # Lock window properties
         self.desk_container.pack_propagate(False)
@@ -1292,6 +1293,38 @@ class NSOFTApp(ctk.CTk):
         self.ui_cfg.save()
         self.dynamic_ui_scaler(self)
 
+    def set_language(self, lang_code):
+        """Switches UI language, persists to config.json, and cleanly re-renders all frames."""
+        self.ui_cfg.set_lang(lang_code)
+        self.apply_language()
+        curr_frame = getattr(self, '_current_frame_name', 'settings')
+        for frm in list(self.frames.values()):
+            try:
+                frm.destroy()
+            except Exception:
+                pass
+        self.frames.clear()
+        self.init_registry_frame()
+        self.init_calendar_frame()
+        self.init_ledger_frame()
+        self.init_analytics_frame()
+        self.init_settings_frame()
+        self.switch_frame(curr_frame)
+
+    def apply_language(self):
+        """Updates persistent top-level navigation labels."""
+        self.title(self.ui_cfg.get_text("app_title"))
+        if hasattr(self, 'btn_registry'):
+            self.btn_registry.configure(text=self.ui_cfg.get_text("nav_clients"))
+        if hasattr(self, 'btn_calendar'):
+            self.btn_calendar.configure(text=self.ui_cfg.get_text("nav_calendar"))
+        if hasattr(self, 'btn_ledger'):
+            self.btn_ledger.configure(text=self.ui_cfg.get_text("nav_ledger"))
+        if hasattr(self, 'btn_analytics'):
+            self.btn_analytics.configure(text=self.ui_cfg.get_text("nav_analytics"))
+        if hasattr(self, 'btn_settings'):
+            self.btn_settings.configure(text=self.ui_cfg.get_text("nav_settings"))
+
     def on_font_slider_changed(self, new_val):
         """Font slider callback: updates self.current_font_size and triggers full traversal."""
         self.update_font_size(new_val)
@@ -1600,8 +1633,9 @@ class NSOFTApp(ctk.CTk):
         font_slider = ctk.CTkSlider(ui_panel, from_=12, to=28, number_of_steps=16, command=self.on_font_slider_changed)
         font_slider.set(self.ui_cfg.settings['font_size'])
         font_slider.grid(row=1, column=1, padx=20, pady=5, sticky="ew")
-        ctk.CTkLabel(ui_panel, text="Language / Γλώσσα", font=ctk.CTkFont(size=18), anchor="w").grid(row=3, column=0, sticky="w", padx=20)
-        lang_menu = ctk.CTkOptionMenu(ui_panel, values=["Ελληνικά", "English"], command=lambda v: self.ui_cfg.settings.update({'lang': 'el' if v == "Ελληνικά" else 'en'}))
+        ctk.CTkLabel(ui_panel, text=self.ui_cfg.get_text("language_label"), font=ctk.CTkFont(size=18), anchor="w").grid(row=3, column=0, sticky="w", padx=20)
+        lang_menu = ctk.CTkOptionMenu(ui_panel, values=["Ελληνικά", "English"], command=lambda v: self.set_language('el' if v == "Ελληνικά" else 'en'))
+        lang_menu.set("Ελληνικά" if self.ui_cfg.settings.get('lang', 'el') == 'el' else "English")
         lang_menu.grid(row=3, column=1, padx=20, pady=5, sticky="ew")
 
         # Panel 2: Backup / Snapshots
@@ -1927,7 +1961,7 @@ class NSOFTApp(ctk.CTk):
         form_body.grid_columnconfigure(1, weight=1) # Entry column stretches
 
         self.new_client_entries = {}
-        fields_layout = CLIENT_FIELDS_SCHEMA
+        fields_layout = self.ui_cfg.get_client_schema()
         for idx, (label_text, key) in enumerate(fields_layout):
             lbl = ctk.CTkLabel(form_body, text=label_text, font=ctk.CTkFont(size=18, weight="bold"), anchor="w")
             lbl.grid(row=idx, column=0, padx=(0, get_scaled_size(10)), pady=get_scaled_size(8), sticky="w")
@@ -3141,18 +3175,18 @@ class EAVModalEditor(ctk.CTkToplevel):
             ctk.CTkLabel(self.scroll_frame, text=str(code_val), font=ctk.CTkFont(weight="bold"), anchor="w").grid(row=current_row, column=1, padx=10, pady=6, sticky="w")
             current_row += 1
             key_map = {'name': 'name', 'phone': 'telephone', 'phone_2': 'telephone_2', 'address': 'address', 'address_2': 'address_2', 'area': 'area', 'vat': 'vat_number', 'profession': 'profession'}
-            schema = CLIENT_FIELDS_SCHEMA
+            schema = self.app_ref.ui_cfg.get_client_schema() if hasattr(self.app_ref, 'ui_cfg') else CLIENT_FIELDS_SCHEMA
             hidden = HIDDEN_KEYS['client']
         elif self.entity_type == 'job':
             key_map = {'job_type': 'category_1', 'subcategory': 'category_2', 'date_logged': 'date', 'time_logged': 'time_slot', 'invoice_number': 'invoice_number', 'notes': 'notes'}
-            schema = JOB_FIELDS_SCHEMA
+            schema = self.app_ref.ui_cfg.get_job_schema() if hasattr(self.app_ref, 'ui_cfg') else JOB_FIELDS_SCHEMA
             hidden = HIDDEN_KEYS['job']
             for pk, pv in [('price_before_vat', '0.00'), ('vat_amount', '0.00'), ('price_after_vat', '0.00')]:
                 if pk not in self.working_data:
                     self.working_data[pk] = pv
         elif self.entity_type == 'payment':
             key_map = {'amount': 'amount', 'date_received': 'date', 'payment_method': 'method', 'job_category': 'job_category', 'notes': 'notes'}
-            schema = PAYMENT_FIELDS_SCHEMA
+            schema = self.app_ref.ui_cfg.get_payment_schema() if hasattr(self.app_ref, 'ui_cfg') else PAYMENT_FIELDS_SCHEMA
             hidden = HIDDEN_KEYS['payment']
         else:
             schema = []
