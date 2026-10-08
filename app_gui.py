@@ -14,7 +14,8 @@ from logic_engine import db_path, BACKUP_DIR  # <── Import our dynamic paths
 
 from logic_engine import fuzzy_search_clients, get_client_jobs, get_client_payments, get_all_recorded_payments, verify_and_fetch_client, record_new_payment, search_jobs_by_date_range, record_new_job, get_revenue_by_category, get_monthly_aggregation, get_stagnant_debt_accounts, get_summary_stats, get_all_clients_summary, wipe_all_application_records, execute_safe_system_export, list_existing_backups, format_date_display, register_new_client_record, get_config_list, add_config_list_item, remove_config_list_item
 
-from ui_config import UIConfig, get_scaled_size, set_scale_root
+from ui_config import UIConfig, get_scaled_size, set_scale_root, install_ui_translator
+install_ui_translator()
 
 ctk.set_appearance_mode("Dark")
 ctk.set_default_color_theme("blue")
@@ -373,19 +374,19 @@ class NSOFTApp(ctk.CTk):
         self.logo_label = ctk.CTkLabel(self.sidebar_frame, text="BOOMER CRM", font=ctk.CTkFont(size=22, weight="bold"))
         self.logo_label.grid(row=0, column=0, padx=20, pady=25)
 
-        self.btn_registry = ctk.CTkButton(self.sidebar_frame, text=self.ui_cfg.get_text("nav_clients"), command=lambda: self.switch_frame("registry"))
+        self.btn_registry = ctk.CTkButton(self.sidebar_frame, text=self.ui_cfg.get_text("👥  ΠΕΛΑΤΕΣ"), command=lambda: self.switch_frame("registry"))
         self.btn_registry.grid(row=1, column=0, padx=20, pady=8, sticky="ew")
 
-        self.btn_calendar = ctk.CTkButton(self.sidebar_frame, text=self.ui_cfg.get_text("nav_calendar"), command=lambda: self.switch_frame("calendar"))
+        self.btn_calendar = ctk.CTkButton(self.sidebar_frame, text=self.ui_cfg.get_text("📅  ΕΡΓΑΣΙΕΣ"), command=lambda: self.switch_frame("calendar"))
         self.btn_calendar.grid(row=2, column=0, padx=20, pady=8, sticky="ew")
 
-        self.btn_ledger = ctk.CTkButton(self.sidebar_frame, text=self.ui_cfg.get_text("nav_ledger"), command=lambda: self.switch_frame("ledger"))
+        self.btn_ledger = ctk.CTkButton(self.sidebar_frame, text=self.ui_cfg.get_text("💰  ΠΛΗΡΩΜΕΣ"), command=lambda: self.switch_frame("ledger"))
         self.btn_ledger.grid(row=3, column=0, padx=20, pady=8, sticky="ew")
 
-        self.btn_analytics = ctk.CTkButton(self.sidebar_frame, text=self.ui_cfg.get_text("nav_analytics"), command=lambda: self.switch_frame("analytics"))
+        self.btn_analytics = ctk.CTkButton(self.sidebar_frame, text=self.ui_cfg.get_text("📊  ΑΝΑΛΥΤΙΚΑ"), command=lambda: self.switch_frame("analytics"))
         self.btn_analytics.grid(row=4, column=0, padx=20, pady=8, sticky="ew")
 
-        self.btn_settings = ctk.CTkButton(self.sidebar_frame, text=self.ui_cfg.get_text("nav_settings"), command=lambda: self.switch_frame("settings"), fg_color="#4A4A4A")
+        self.btn_settings = ctk.CTkButton(self.sidebar_frame, text=self.ui_cfg.get_text("⚙️  ΡΥΘΜΙΣΕΙΣ"), command=lambda: self.switch_frame("settings"), fg_color="#4A4A4A")
         self.btn_settings.grid(row=6, column=0, padx=20, pady=20, sticky="ew")
 
         self.desk_container = ctk.CTkFrame(self, fg_color="transparent")
@@ -1315,15 +1316,15 @@ class NSOFTApp(ctk.CTk):
         """Updates persistent top-level navigation labels."""
         self.title(self.ui_cfg.get_text("app_title"))
         if hasattr(self, 'btn_registry'):
-            self.btn_registry.configure(text=self.ui_cfg.get_text("nav_clients"))
+            self.btn_registry.configure(text=self.ui_cfg.get_text("👥  ΠΕΛΑΤΕΣ"))
         if hasattr(self, 'btn_calendar'):
-            self.btn_calendar.configure(text=self.ui_cfg.get_text("nav_calendar"))
+            self.btn_calendar.configure(text=self.ui_cfg.get_text("📅  ΕΡΓΑΣΙΕΣ"))
         if hasattr(self, 'btn_ledger'):
-            self.btn_ledger.configure(text=self.ui_cfg.get_text("nav_ledger"))
+            self.btn_ledger.configure(text=self.ui_cfg.get_text("💰  ΠΛΗΡΩΜΕΣ"))
         if hasattr(self, 'btn_analytics'):
-            self.btn_analytics.configure(text=self.ui_cfg.get_text("nav_analytics"))
+            self.btn_analytics.configure(text=self.ui_cfg.get_text("📊  ΑΝΑΛΥΤΙΚΑ"))
         if hasattr(self, 'btn_settings'):
-            self.btn_settings.configure(text=self.ui_cfg.get_text("nav_settings"))
+            self.btn_settings.configure(text=self.ui_cfg.get_text("⚙️  ΡΥΘΜΙΣΕΙΣ"))
 
     def on_font_slider_changed(self, new_val):
         """Font slider callback: updates self.current_font_size and triggers full traversal."""
