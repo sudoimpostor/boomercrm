@@ -1,0 +1,45 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.bak
+
+# C extensions
+*.so
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Embedded Python runtimes (>200MB, not tracked in git)
+python_full/
+python_embed/
+
+# Local logs & sessions
+*.log
+migration_log.txt
+session_state.json
+
+# Local editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Backups content (keep directory structure via .gitkeep)
+backups/*
+!backups/.gitkeep
+emergency_hold/
+
+# Raw CSV data dumps (keep repository clean of customer spreadsheets)
+*.csv
+*.xlsx
+*.dbf
