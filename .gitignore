@@ -35,8 +35,7 @@ $RECYCLE.BIN/
 .DS_Store
 
 # Backups content (keep directory structure via .gitkeep)
-backups/*
-!backups/.gitkeep
+backups/
 emergency_hold/
 
 # Raw CSV data dumps (keep repository clean of customer spreadsheets)

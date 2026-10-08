@@ -123,7 +123,6 @@ boomer-crm/
 ├── run_app.py                # Python entrypoint launcher
 ├── RUN_BOOMER_CRM.bat        # Windows one-click desktop launcher
 ├── ui_config.py              # UI styles, theme tokens, and dynamic font scalers
-├── backups/                  # Backup snapshots folder (.gitkeep)
 └── .gitignore                # Git ignore rules
 ```
 
